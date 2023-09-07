@@ -2077,48 +2077,100 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      items1: (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_1__.generateItems)(15, function (i) {
-        return {
-          id: "1" + i,
-          data: "Draggable 1 - ".concat(i)
-        };
-      }),
-      items2: (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_1__.generateItems)(15, function (i) {
-        return {
-          id: "2" + i,
-          data: "Draggable 2 - ".concat(i)
-        };
-      }),
-      items3: (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_1__.generateItems)(15, function (i) {
-        return {
-          id: "3" + i,
-          data: "Draggable 3 - ".concat(i)
-        };
-      }),
-      items4: (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_1__.generateItems)(15, function (i) {
-        return {
-          id: "4" + i,
-          data: "Draggable 3 - ".concat(i)
-        };
-      })
+      agafant: {},
+      itemtot: {},
+      itemsalf: {},
+      items: {},
+      assessors: ['Alfredo Rafael Vicente Boix', 'Rosa Mª Gomar Sanz', 'Carlos Settier', 'FPA', 'PLURILINGUISME2', 'INFANTIL2', 'ARTISTICEXPRESIU', 'Núria del Valle', 'Carmen Siurana Altabás', 'Marta INCLUSIVA', 'Alicia Alcaraz González', 'CARLOS DAMIÁN FUENTES FOS', 'cap', 'Amelia']
+
+      // itemsalf: generateItems(15, (i) => ({
+      //   id: "1" + i,
+      //   data: `Draggable 1 - ${i}`,
+      // })),
+      // items2: generateItems(15, (i) => ({
+      //   id: "2" + i,
+      //   data: `Draggable 2 - ${i}`,
+      // })),
+      // items3: generateItems(15, (i) => ({
+      //   id: "3" + i,
+      //   data: `Draggable 3 - ${i}`,
+      // })),
+      // items4: generateItems(15, (i) => ({
+      //   id: "4" + i,
+      //   data: `Draggable 3 - ${i}`,
+      // })),
     };
   },
+
   methods: {
-    onDrop: function onDrop(collection, dropResult) {
-      this[collection] = (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_1__.applyDrag)(this[collection], dropResult);
+    onDrop: function onDrop(ass, dropResult) {
+      //this[collection] = applyDrag(this[collection], dropResult);
+      console.log(dropResult);
+      console.log(ass);
+      //alert(dropResult.element.id);
+      if (dropResult.addedIndex !== null) {
+        var foundIndex = this.itemtot.findIndex(function (x) {
+          return x.id == dropResult.element.id;
+        });
+        this.itemtot[foundIndex]['assessor'] = ass;
+        var url = "centres/" + this.itemtot[foundIndex]['id'];
+        axios.put(url, this.itemtot[foundIndex]).then(function (res) {
+          console.log(res);
+        })["catch"](function (err) {
+          console.error(err);
+        });
+      }
     },
-    getChildPayload1: function getChildPayload1(index) {
-      return this.items1[index];
+    agafa_dades: function agafa_dades() {
+      var _this = this;
+      var params = {
+        nom: "Alfredo Rafael Vicente Boix"
+      };
+      var url = "centres";
+      axios.get(url).then(function (res) {
+        _this.itemtot = res.data;
+        //this.items['Alfredo Rafael Vicente Boix'] = Object.values(this.itemtot).filter(item => item.assessor === 'Alfredo Rafael Vicente Boix');
+
+        //this.itemsalf = Object.values(res.data).filter(item => item.assessor === 'Alfredo Rafael Vicente Boix');
+        //console.log(this.itemsalf)
+      })["catch"](function (err) {
+        console.error(err);
+      });
     },
-    getChildPayload2: function getChildPayload2(index) {
-      return this.items2[index];
+    getChildPayload: function getChildPayload(groupIndex, itemIndex) {
+      //alert(itemIndex);
+      return groupIndex;
     },
-    getChildPayload3: function getChildPayload3(index) {
-      return this.items3[index];
+    aux: function aux(ass) {
+      return Object.values(this.itemtot).filter(function (item) {
+        return item.assessor === ass;
+      });
     },
-    getChildPayload4: function getChildPayload4(index) {
-      return this.items4[index];
+    dades: function dades(ass) {
+      var itemsalf = this.aux(ass);
+      var priv = Object.values(itemsalf).filter(function (item) {
+        return item.situacio === 'CON.';
+      }).length;
+      var pub = Object.values(itemsalf).filter(function (item) {
+        return item.situacio === 'PUB.';
+      }).length;
+      var total = itemsalf.length;
+      var ret = {
+        'pub': pub,
+        'priv': priv,
+        'total': total
+      };
+      return ret;
     }
+  },
+  mounted: function mounted() {
+    this.agafa_dades();
+  },
+  computed: {
+
+    // aux(ass){
+    //   return Object.values(this.itemtot).filter(item => item.assessor === ass);
+    // }
   }
 });
 
@@ -2140,200 +2192,48 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "groups"
-  }, [_c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload1
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items1", $event);
-      }
+    staticClass: "groups",
+    staticStyle: {
+      border: "solid 3px"
     }
-  }, _vm._l(_vm.items1, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload2
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items2", $event);
+  }, _vm._l(_vm.assessors, function (ass, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "group",
+      staticStyle: {
+        border: "dashed 3px"
       }
-    }
-  }, _vm._l(_vm.items2, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload3
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items3", $event);
+    }, [_c("div", {
+      staticStyle: {
+        height: "100px",
+        "font-size": "12px"
       }
-    }
-  }, _vm._l(_vm.items3, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
+    }, [_vm._v("\n      Nom: " + _vm._s(ass)), _c("br"), _vm._v("\n      Centres: " + _vm._s(_vm.dades(ass)["total"])), _c("br"), _vm._v("\n      Publics: " + _vm._s(_vm.dades(ass)["pub"])), _c("br"), _vm._v("\n      Privats: " + _vm._s(_vm.dades(ass)["priv"])), _c("br")]), _vm._v(" "), _c("Container", {
+      attrs: {
+        "group-name": "ass",
+        "get-child-payload": function getChildPayload(itemIndex) {
+          return _vm.getChildPayload(index, itemIndex);
+        }
+      },
+      on: {
+        drop: function drop($event) {
+          return _vm.onDrop(ass, $event);
+        }
       }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
-      }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
-      }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
-      }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
-      }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
-      }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
-      }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
-      }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1), _vm._v(" "), _c("div", {
-    staticClass: "group"
-  }, [_c("Container", {
-    attrs: {
-      "group-name": "1",
-      "get-child-payload": _vm.getChildPayload4
-    },
-    on: {
-      drop: function drop($event) {
-        return _vm.onDrop("items4", $event);
-      }
-    }
-  }, _vm._l(_vm.items4, function (item) {
-    return _c("Draggable", {
-      key: item.id
-    }, [_c("div", [_vm._v("\n          " + _vm._s(item.data) + "\n        ")])]);
-  }), 1)], 1)]);
+    }, _vm._l(_vm.aux(ass), function (item) {
+      return _c("Draggable", {
+        key: item.id
+      }, [_c("div", {
+        staticStyle: {
+          "font-size": "11px",
+          border: "solid 1px"
+        },
+        attrs: {
+          id: item.id
+        }
+      }, [_vm._v("\n          " + _vm._s(item.nom) + "\n          "), _c("br"), _vm._v("\n          " + _vm._s(item["2ANYS"] ? "2anys" : "-") + " \n          " + _vm._s(item["PROA"] ? "PROA" : "-") + " \n          " + _vm._s(item["Aula CIL"] ? "UECO" : "-") + " \n          " + _vm._s(item["situacio"]) + " \n          ")])]);
+    }), 1)], 1);
+  }), 0);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -2393,6 +2293,7 @@ window.Icons = __webpack_require__(/*! ../../vendor/uikit/uikit/dist/js/uikit-ic
 UIkit.use(window.Icons);
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
 
 /***/ }),
 
@@ -14191,7 +14092,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.groups[data-v-299e239e] {\n  display: flex;\n  justify-content: stretch;\n}\n.group[data-v-299e239e] {\n  flex: 1;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.groups[data-v-299e239e] {\n  display: flex;\n  justify-content: stretch;\n}\n.group[data-v-299e239e] {\n  flex: 1;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

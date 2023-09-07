@@ -95,7 +95,7 @@
         </nav>
     </div>
 
-    <main data-uk-height-viewport="expand: true">
+    <main class="uk-margin" data-uk-height-viewport="expand: true">
         @yield('content')
     </main>
 

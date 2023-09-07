@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="uk-container">
+<div>
     <div class="row justify-content-center">
-                    <example-component />
+            <example-component />
     </div>
 </div>
 @endsection
